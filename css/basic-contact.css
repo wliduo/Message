@@ -12,6 +12,20 @@ body {background: #101A24 url(https://wang926454.gitee.io/reader/Image/201811/no
 
 a {
     color: #ddd;
+    text-decoration:none;
+}
+
+a:link {
+    color: #ddd;
+    text-decoration:none;
+}
+a:visited {
+    color: #ddd;
+    text-decoration:none;
+}
+a:active {
+    color: #ddd;
+    text-decoration:none;
 }
 
 li {
