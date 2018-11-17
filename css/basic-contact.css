@@ -1,0 +1,27 @@
+/*
+Original design: Basic Contact (v1.2 - Sep 11, 2012) - A free xhtml/css website template by Andreas Viklund.
+For more information, see http://www.cssmoban.com/templates/basic-contact/
+*/
+
+body {background: #101A24 url(https://wang926454.gitee.io/reader/Image/201811/normal/09010.png) top center no-repeat; font:Georgia,Times New Roman,serif; color:#ddd;}
+
+li {
+    display: block;
+    list-style: none;
+    margin-top: 15px;
+    padding: 10px;
+    box-shadow: 0px 0px 3px #ccc;
+}
+
+b {
+    font-size: 18px;
+    margin-right: 20px;
+}
+
+label {
+    margin-right: 20px;
+}
+
+p {
+    word-wrap: break-word;
+}
