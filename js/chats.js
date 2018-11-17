@@ -52,6 +52,10 @@ function addChats(){
         alert("内容为空");
         return;
     }
+    if(name.indexOf("/script") != -1 || email.indexOf("/script") != -1 || web.indexOf("/script") != -1 || msg.indexOf("/script") != -1){
+        alert("请勿输入特殊字符");
+        return;
+    }
     const query = Bmob.Query('chats');
     query.set("name", name);
     query.set("email", email);
@@ -60,7 +64,8 @@ function addChats(){
     query.save().then(res => {
         console.log(res);
         reset();
-        queryChats(0, size);
+        skip = 0;
+        queryChats(skip, size);
     }).catch(err => {
         console.log(err);
     })
