@@ -42,21 +42,26 @@ function queryChats(skip, size){
 }
 
 // 添加留言
-function addChats(){
+function addChats(btn){
+    // 开始执行，先将按钮置为不可用，执行完后设置可用
+    btn.disabled = true;
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
     var web = document.getElementById("web").value;
     var msg = document.getElementById("msg").value;
     if(name.trim() === ''){
         layer.msg('昵称为空');
+        btn.disabled = false;
         return;
     }
     if(msg.trim() === ''){
         layer.msg('内容为空');
+        btn.disabled = false;
         return;
     }
     if(name.indexOf("/script") != -1 || email.indexOf("/script") != -1 || web.indexOf("/script") != -1 || msg.indexOf("/script") != -1){
         layer.msg('请勿输入特殊字符');
+        btn.disabled = false;
         return;
     }
     const query = Bmob.Query('chats');
@@ -72,8 +77,11 @@ function addChats(){
         layer.msg('留言成功');
         skip = 0;
         queryChats(skip, size);
+        document.getElementById("page").innerHTML = '1';
+        btn.disabled = false;
     }).catch(err => {
         layer.msg('留言失败，请联系管理员');
+        btn.disabled = false;
         console.log(err);
     })
 }
@@ -90,18 +98,26 @@ function reset(){
 queryChats(skip, size);
 
 // 上一页
-function previous(){
+function previous(btn){
+    // 开始执行，先将按钮置为不可用，执行完后设置可用
+    btn.disabled = true;
     if(skip == 0){
         layer.msg('当前是第一页');
+        btn.disabled = false;
         return;
     }else{
         skip = skip - size;
         queryChats(skip, size);
+        var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
+        document.getElementById("page").innerHTML = page;
+        btn.disabled = false;
     }
 }
 
 // 下一页
-function next(){
+function next(btn){
+    // 开始执行，先将按钮置为不可用，执行完后设置可用
+    btn.disabled = true;
     skip = skip + size;
     const query = Bmob.Query("chats");
     query.equalTo("url", "==", url);
@@ -115,6 +131,7 @@ function next(){
         if(res.length == 0){
             skip = skip - size;
             layer.msg('当前是最后一页');
+            btn.disabled = false;
             return;
         }else{
             var ul = document.getElementById("ul");
@@ -134,6 +151,10 @@ function next(){
                 li.innerHTML = html;
                 ul.appendChild(li);
             }
+            var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
+            // console.log(page);
+            document.getElementById("page").innerHTML = page;
+            btn.disabled = false;
         }
     });
 }

@@ -36,7 +36,7 @@
 			</div>
 		</form>
 		<div class="form-group">
-			<button type="submit" onclick="addChats()" class="btn btn-default">提交</button>
+			<button type="submit" onclick="addChats(this)" class="btn btn-default">提交</button>
 			<button type="reset" onclick="reset()" class="btn btn-default">重置</button>
 		</div>
 
@@ -54,8 +54,10 @@
 			</li> -->
 		</ul>
 		<ul class="pager">
-			<button onclick="previous()" class="btn btn-default">上一页</button>
-			<button onclick="next()" class="btn btn-default">下一页</button>
+			<li><button onclick="previous(this)" class="btn btn-default">上一页</button></li>
+			<li>第<label id="page">1</label>页</li>
+			<li><button onclick="next(this)" class="btn btn-default">下一页</button></li>
+			
 		</ul>
 	</div>
 </div>
