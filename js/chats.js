@@ -158,3 +158,54 @@ function next(btn){
         }
     });
 }
+
+// 页面跳转
+function jump(){
+    layer.prompt({title: '请输入页码', formType: 0}, function(text, index){
+        layer.close(index);
+        var reg = /^\d(\.\d)?$|^[1-9]\d(\.\d)?$/;
+        if(reg.test(text)){
+            if(text == 0){
+                layer.msg('请输入1-99的正整数');
+                return;
+            }
+            const query = Bmob.Query("chats");
+            query.equalTo("url", "==", url);
+            // 时间降序排列
+            query.order("-createdAt");
+            query.skip((parseInt(text) - parseInt(1)) * size);
+            query.limit(size);
+            query.find().then(res => {
+                // 留言为空
+                if(res.length == 0){
+                    layer.msg('超过最大页码');
+                    return;
+                }else{
+                    skip = (parseInt(text) - parseInt(1)) * size;
+                    var ul = document.getElementById("ul");
+                    ul.innerHTML = "";
+                    // 将查询的留言填写进ul li
+                    for(var i=0; i<res.length; i++){
+                        var li = document.createElement("li");
+                        var html = "<b>" + res[i].name + "</b>";
+                        if(res[i].web !== ''){
+                            html = html + "<label>" + res[i].web + "</label>";
+                        }else{
+                            if(res[i].email !== ''){
+                                html = html + "<label>" + res[i].email + "</label>";
+                            }
+                        }
+                        html = html + "<label>" + res[i].createdAt + "</label><p>" + res[i].msg + "</p>";
+                        li.innerHTML = html;
+                        ul.appendChild(li);
+                    }
+                    var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
+                    document.getElementById("page").innerHTML = page;
+                    layer.msg('跳转到第' + text + '页');
+                }
+            });
+        }else{
+            layer.msg('请输入1-99的正整数');
+        }
+    });
+}

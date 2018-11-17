@@ -49,4 +49,8 @@ p {
     word-wrap: break-word;
 }
 
+.btn-link, .btn-link:active, .btn-link:focus, .btn-link:hover {
+    color: #ddd;
+    text-decoration:none;
+}
 
