@@ -4,6 +4,30 @@ var skip = 0;
 var size = 5;
 var url =  window.location.href;
 
+// 获取当前时间
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    String(hours).length < 2 ? (hours = "0" + hours): hours;
+    String(minutes).length < 2 ? (minutes = "0" + minutes): minutes;
+    String(seconds).length < 2 ? (seconds = "0" + seconds): seconds;
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + hours + seperator2 + minutes + seperator2 + seconds;
+    return currentdate;
+}
+
 // 查询留言
 function queryChats(skip, size){
     const query = Bmob.Query("chats");
@@ -70,6 +94,7 @@ function addChats(btn){
     query.set("email", email);
     query.set("web", web);
     query.set("msg", msg);
+    query.set("date", getNowFormatDate());
     
     query.save().then(res => {
         // console.log(res);
