@@ -22,22 +22,22 @@
 		<form role="form">
 			<div class="row">
 				<div class="col-lg-3" style="margin-top:10px;">
-					<input type="text" id="name" class="form-control" maxlength="12" placeholder="你的昵称">
+					<input type="text" id="name" class="form-control" maxlength="12" placeholder="昵称">
 				</div>
 				<div class="col-lg-4" style="margin-top:10px;">
-					<input type="text" id="email" class="form-control" maxlength="30" placeholder="你的邮件(选填)">
+					<input type="text" id="email" class="form-control" maxlength="30" placeholder="邮件(选填)">
 				</div>
 				<div class="col-lg-5" style="margin-top:10px;">
-					<input type="text" id="web" class="form-control" maxlength="35" placeholder="你的网址(选填)">
+					<input type="text" id="web" class="form-control" maxlength="35" placeholder="网址(选填)">
 				</div>
 			</div>
 			<div class="form-group" style="margin-top:10px;">
-				<textarea class="form-control" id="msg" rows="3" maxlength="200" placeholder="你的留言"></textarea>
+				<textarea class="form-control" id="msg" rows="3" maxlength="200" placeholder="留言"></textarea>
 			</div>
 		</form>
 		<div class="form-group">
 			<button type="submit" onclick="addChats(this)" class="btn btn-danger">提交</button>
-			<button type="reset" onclick="reset()" class="btn btn-primary">重置</button>
+			<button type="reset" onclick="reset()" class="btn btn-default">重置</button>
 		</div>
 
 	</div>
@@ -54,13 +54,10 @@
 			</li> -->
 		</ul>
 		<ul class="pager">
-				
-				<li><button onclick="jump(this)" class="btn btn-warning">跳转</button></li>
-				<li><button class="btn btn-link">第<span id="page">1</span>页</button></li>
+			<li><button onclick="jump(this)" class="btn btn-success active">跳转</button></li>
+			<li><button class="btn btn-link">第<span id="page">1</span>页</button></li>
 			<li><button onclick="previous(this)" class="btn btn-primary">上一页</button></li>
 			<li><button onclick="next(this)" class="btn btn-primary">下一页</button></li>
-			
-			
 		</ul>
 	</div>
 </div>
