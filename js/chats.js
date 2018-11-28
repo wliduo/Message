@@ -1,8 +1,15 @@
 Bmob.initialize("c7401c529e15dad3f96901ac95e087dd", "8e9ecc1c5a2df4e02efe6a602f0566b9");
 
+// 跳过条数
 var skip = 0;
+// 条数(每页条数)
 var size = 5;
+// 总条数
+var countSize = 0;
+// 总页数
+var pageSize = 0;
 var url =  window.location.href;
+// var url =  "https://msg.wang64.cn/";
 
 // 获取当前时间
 function getNowFormatDate() {
@@ -31,7 +38,25 @@ function getNowFormatDate() {
 // 查询留言
 function queryChats(skip, size){
     const query = Bmob.Query("chats");
+    // 根据当前url查询数据
     query.equalTo("url", "==", url);
+    // 查询总条数
+    query.count().then(res => {
+        countSize = res;
+        // console.log(countSize);
+        // 获取总页数
+        if(parseInt(countSize % size) != 0){
+            pageSize = parseInt(countSize / size) + parseInt(1);
+        }else{
+            pageSize = parseInt(countSize / size);
+        }
+        // 获取当前页数
+        var page = parseInt(skip / size) + parseInt(1);
+        if(countSize == 0){
+            page = 0;
+        }
+        document.getElementById("page").innerHTML = page + '/' + pageSize;
+    });
     // 时间降序排列
     query.order("-createdAt");
     query.skip(skip);
@@ -102,7 +127,6 @@ function addChats(btn){
         layer.msg('留言成功');
         skip = 0;
         queryChats(skip, size);
-        document.getElementById("page").innerHTML = '1';
         btn.disabled = false;
     }).catch(err => {
         layer.msg('留言失败，请联系管理员');
@@ -134,7 +158,6 @@ function previous(btn){
         skip = skip - size;
         queryChats(skip, size);
         var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
-        document.getElementById("page").innerHTML = page;
         btn.disabled = false;
     }
 }
@@ -144,93 +167,45 @@ function next(btn){
     // 开始执行，先将按钮置为不可用，执行完后设置可用
     btn.disabled = true;
     skip = skip + size;
-    const query = Bmob.Query("chats");
-    query.equalTo("url", "==", url);
-    // 时间降序排列
-    query.order("-createdAt");
-    query.skip(skip);
-    query.limit(size);
-    query.find().then(res => {
-        // console.log(res);
-        // 留言为空
-        if(res.length == 0){
-            skip = skip - size;
-            layer.msg('当前是最后一页');
-            btn.disabled = false;
-            return;
-        }else{
-            var ul = document.getElementById("ul");
-            ul.innerHTML = "";
-            // 将查询的留言填写进ul li
-            for(var i=0; i<res.length; i++){
-                var li = document.createElement("li");
-                var html = "<b>" + res[i].name + "</b>";
-                if(res[i].web !== ''){
-                    html = html + "<label>" + res[i].web + "</label>";
-                }else{
-                    if(res[i].email !== ''){
-                        html = html + "<label>" + res[i].email + "</label>";
-                    }
-                }
-                html = html + "<label>" + res[i].createdAt + "</label><p>" + res[i].msg + "</p>";
-                li.innerHTML = html;
-                ul.appendChild(li);
-            }
-            var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
-            // console.log(page);
-            document.getElementById("page").innerHTML = page;
-            btn.disabled = false;
-        }
-    });
+    if(skip >= countSize){
+        console.log(skip + ',' + countSize);
+        skip = skip - size;
+        layer.msg('当前是最后一页');
+        btn.disabled = false;
+        return;
+    }else{
+        queryChats(skip, size);
+        var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
+        btn.disabled = false;
+    }
 }
 
 // 页面跳转
 function jump(){
     layer.prompt({title: '请输入页码', formType: 0}, function(text, index){
         layer.close(index);
-        var reg = /^\d(\.\d)?$|^[1-9]\d(\.\d)?$/;
+        /* var reg = /^\d(\.\d)?$|^[1-9]\d(\.\d)?$/;
         if(reg.test(text)){
-            if(text == 0){
-                layer.msg('请输入1-99的正整数');
+            if(text > pageSize){
+                layer.msg('超过最大页码');
                 return;
             }
-            const query = Bmob.Query("chats");
-            query.equalTo("url", "==", url);
-            // 时间降序排列
-            query.order("-createdAt");
-            query.skip((parseInt(text) - parseInt(1)) * size);
-            query.limit(size);
-            query.find().then(res => {
-                // 留言为空
-                if(res.length == 0){
-                    layer.msg('超过最大页码');
-                    return;
-                }else{
-                    skip = (parseInt(text) - parseInt(1)) * size;
-                    var ul = document.getElementById("ul");
-                    ul.innerHTML = "";
-                    // 将查询的留言填写进ul li
-                    for(var i=0; i<res.length; i++){
-                        var li = document.createElement("li");
-                        var html = "<b>" + res[i].name + "</b>";
-                        if(res[i].web !== ''){
-                            html = html + "<label>" + res[i].web + "</label>";
-                        }else{
-                            if(res[i].email !== ''){
-                                html = html + "<label>" + res[i].email + "</label>";
-                            }
-                        }
-                        html = html + "<label>" + res[i].createdAt + "</label><p>" + res[i].msg + "</p>";
-                        li.innerHTML = html;
-                        ul.appendChild(li);
-                    }
-                    var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
-                    document.getElementById("page").innerHTML = page;
-                    layer.msg('跳转到第' + text + '页');
-                }
-            });
+            skip = (parseInt(text) - parseInt(1)) * size;
+            queryChats(skip, size);
+            layer.msg('跳转到第' + text + '页');
         }else{
             layer.msg('请输入1-99的正整数');
+        } */
+        if(text <= 0 || text >= 100){
+            layer.msg('请输入1-99的正整数');
+            return;
         }
+        if(text > pageSize){
+            layer.msg('超过最大页码');
+            return;
+        }
+        skip = (parseInt(text) - parseInt(1)) * size;
+        queryChats(skip, size);
+        layer.msg('跳转到第' + text + '页');
     });
 }
