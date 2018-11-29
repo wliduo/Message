@@ -58,11 +58,11 @@ function queryChats(skip, size){
         document.getElementById("page").innerHTML = page + '/' + pageSize;
     });
     // 时间降序排列
-    query.order("-createdAt");
+    query.order("-date");
     query.skip(skip);
     query.limit(size);
     query.find().then(res => {
-        // console.log(res);
+        console.log(res);
         var ul = document.getElementById("ul");
         ul.innerHTML = "";
         // 将查询的留言填写进ul li
@@ -76,7 +76,7 @@ function queryChats(skip, size){
                     html = html + "<label>" + res[i].email + "</label>";
                 }
             }
-            html = html + "<label>" + res[i].createdAt + "</label><p>" + res[i].msg + "</p>";
+            html = html + "<label>" + res[i].date + "</label><p>" + res[i].msg + "</p>";
             li.innerHTML = html;
             ul.appendChild(li);
         }
@@ -98,11 +98,6 @@ function addChats(btn){
     var email = document.getElementById("email").value;
     var web = document.getElementById("web").value;
     var msg = document.getElementById("msg").value;
-    if(name.trim() === ''){
-        layer.msg('昵称为空');
-        btn.disabled = false;
-        return;
-    }
     if(msg.trim() === ''){
         layer.msg('内容为空');
         btn.disabled = false;
@@ -112,6 +107,9 @@ function addChats(btn){
         layer.msg('请勿输入特殊字符');
         btn.disabled = false;
         return;
+    }
+    if(name.trim() === ''){
+        name = '匿名';
     }
     const query = Bmob.Query('chats');
     query.set("url", url);
