@@ -8,7 +8,7 @@ var size = 5;
 var countSize = 0;
 // 总页数
 var pageSize = 0;
-var url =  window.location.href;
+var url =  window.location.href.split('?')[0];
 // var url =  "https://msg.wang64.cn/";
 
 // 获取当前时间
@@ -35,11 +35,27 @@ function getNowFormatDate() {
     return currentdate;
 }
 
+// 取地址栏参数
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        return unescape(r[2]);
+    }
+    return null;
+}
+
 // 查询留言
 function queryChats(skip, size){
     const query = Bmob.Query("chats");
     // 根据当前url查询数据
     query.equalTo("url", "==", url);
+    if(getQueryString("type")){
+        // query.or(query.equalTo("type", '==', '0'), query.equalTo("type", '==', '1'));
+        query.equalTo("type", '==', '1');
+    }else{
+        query.equalTo("type", '==', '0');
+    }
     // 查询总条数
     query.count().then(res => {
         countSize = res;
@@ -118,6 +134,11 @@ function addChats(btn){
     query.set("web", web);
     query.set("msg", msg);
     query.set("date", getNowFormatDate());
+    if(getQueryString("type")){
+        query.set("type", '1');
+    }else{
+        query.set("type", '0');
+    }
     
     query.save().then(res => {
         // console.log(res);
@@ -206,4 +227,8 @@ function jump(){
         queryChats(skip, size);
         layer.msg('跳转到第' + text + '页');
     });
+}
+
+function me(){
+    window.location.href = "https://msg.wang64.cn?type=me";
 }
