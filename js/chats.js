@@ -27,9 +27,9 @@ function getNowFormatDate() {
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
-    String(hours).length < 2 ? (hours = "0" + hours): hours;
-    String(minutes).length < 2 ? (minutes = "0" + minutes): minutes;
-    String(seconds).length < 2 ? (seconds = "0" + seconds): seconds;
+    String(hours).length < 2 ? (hours = "0" + hours) : hours;
+    String(minutes).length < 2 ? (minutes = "0" + minutes) : minutes;
+    String(seconds).length < 2 ? (seconds = "0" + seconds) : seconds;
     var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
             + " " + hours + seperator2 + minutes + seperator2 + seconds;
     return currentdate;
