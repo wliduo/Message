@@ -8,7 +8,7 @@ var size = 5;
 var countSize = 0;
 // 总页数
 var pageSize = 0;
-var url =  window.location.href.split('?')[0];
+var url = window.location.href.split('?')[0];
 // var url =  "https://msg.wang64.cn/";
 
 // 获取当前时间
@@ -31,7 +31,7 @@ function getNowFormatDate() {
     String(minutes).length < 2 ? (minutes = "0" + minutes) : minutes;
     String(seconds).length < 2 ? (seconds = "0" + seconds) : seconds;
     var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-            + " " + hours + seperator2 + minutes + seperator2 + seconds;
+        + " " + hours + seperator2 + minutes + seperator2 + seconds;
     return currentdate;
 }
 
@@ -46,14 +46,14 @@ function getQueryString(name) {
 }
 
 // 查询留言
-function queryChats(skip, size){
+function queryChats(skip, size) {
     const query = Bmob.Query("chats");
     // 根据当前url查询数据
     query.equalTo("url", "==", url);
-    if(getQueryString("type")){
+    if (getQueryString("type")) {
         // query.or(query.equalTo("type", '==', '0'), query.equalTo("type", '==', '1'));
         query.equalTo("type", '==', '1');
-    }else{
+    } else {
         query.equalTo("type", '==', '0');
     }
     // 查询总条数
@@ -61,14 +61,14 @@ function queryChats(skip, size){
         countSize = res;
         // console.log(countSize);
         // 获取总页数
-        if(parseInt(countSize % size) != 0){
+        if (parseInt(countSize % size) != 0) {
             pageSize = parseInt(countSize / size) + parseInt(1);
-        }else{
+        } else {
             pageSize = parseInt(countSize / size);
         }
         // 获取当前页数
         var page = parseInt(skip / size) + parseInt(1);
-        if(countSize == 0){
+        if (countSize == 0) {
             page = 0;
         }
         document.getElementById("page").innerHTML = page + '/' + pageSize;
@@ -82,22 +82,27 @@ function queryChats(skip, size){
         var ul = document.getElementById("ul");
         ul.innerHTML = "";
         // 将查询的留言填写进ul li
-        for(var i=0; i<res.length; i++){
+        for (var i = 0; i < res.length; i++) {
             var li = document.createElement("li");
             var html = "<b>" + res[i].name + "</b>";
-            if(res[i].web !== ''){
+            if (res[i].web !== '') {
+                html = "<a href='"+ res[i].web +"' target='_blank'><img src='http://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+            } else {
+                html = "<img src='http://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' />" + html;
+            }
+            /* if (res[i].web !== '') {
                 html = html + "<label>" + res[i].web + "</label>";
-            }else{
-                if(res[i].email !== ''){
+            } else {
+                if (res[i].email !== '') {
                     html = html + "<label>" + res[i].email + "</label>";
                 }
-            }
+            } */
             html = html + "<label>" + res[i].date + "</label><p>" + res[i].msg + "</p>";
             li.innerHTML = html;
             ul.appendChild(li);
         }
         // 留言为空
-        if(res.length == 0){
+        if (res.length == 0) {
             layer.msg('还没有留言哦~');
             var li = document.createElement("li");
             li.innerHTML = "<label>还没有留言哦~</label>";
@@ -107,24 +112,24 @@ function queryChats(skip, size){
 }
 
 // 添加留言
-function addChats(btn){
+function addChats(btn) {
     // 开始执行，先将按钮置为不可用，执行完后设置可用
     btn.disabled = true;
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
     var web = document.getElementById("web").value;
     var msg = document.getElementById("msg").value;
-    if(msg.trim() === ''){
+    if (msg.trim() === '') {
         layer.msg('内容为空');
         btn.disabled = false;
         return;
     }
-    if(name.indexOf("/script") != -1 || email.indexOf("/script") != -1 || web.indexOf("/script") != -1 || msg.indexOf("/script") != -1){
+    if (name.indexOf("/script") != -1 || email.indexOf("/script") != -1 || web.indexOf("/script") != -1 || msg.indexOf("/script") != -1) {
         layer.msg('请勿输入特殊字符');
         btn.disabled = false;
         return;
     }
-    if(name.trim() === ''){
+    if (name.trim() === '') {
         name = '匿名';
     }
     const query = Bmob.Query('chats');
@@ -134,12 +139,12 @@ function addChats(btn){
     query.set("web", web);
     query.set("msg", msg);
     query.set("date", getNowFormatDate());
-    if(getQueryString("type")){
+    if (getQueryString("type")) {
         query.set("type", '1');
-    }else{
+    } else {
         query.set("type", '0');
     }
-    
+
     query.save().then(res => {
         // console.log(res);
         reset();
@@ -155,7 +160,7 @@ function addChats(btn){
 }
 
 // 重置
-function reset(){
+function reset() {
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
     document.getElementById("web").value = "";
@@ -166,14 +171,14 @@ function reset(){
 queryChats(skip, size);
 
 // 上一页
-function previous(btn){
+function previous(btn) {
     // 开始执行，先将按钮置为不可用，执行完后设置可用
     btn.disabled = true;
-    if(skip == 0){
+    if (skip == 0) {
         layer.msg('当前是第一页');
         btn.disabled = false;
         return;
-    }else{
+    } else {
         skip = skip - size;
         queryChats(skip, size);
         var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
@@ -182,17 +187,17 @@ function previous(btn){
 }
 
 // 下一页
-function next(btn){
+function next(btn) {
     // 开始执行，先将按钮置为不可用，执行完后设置可用
     btn.disabled = true;
     skip = skip + size;
-    if(skip >= countSize){
+    if (skip >= countSize) {
         console.log(skip + ',' + countSize);
         skip = skip - size;
         layer.msg('当前是最后一页');
         btn.disabled = false;
         return;
-    }else{
+    } else {
         queryChats(skip, size);
         var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
         btn.disabled = false;
@@ -200,8 +205,8 @@ function next(btn){
 }
 
 // 页面跳转
-function jump(){
-    layer.prompt({title: '请输入页码', formType: 0}, function(text, index){
+function jump() {
+    layer.prompt({ title: '请输入页码', formType: 0 }, function (text, index) {
         layer.close(index);
         /* var reg = /^\d(\.\d)?$|^[1-9]\d(\.\d)?$/;
         if(reg.test(text)){
@@ -215,11 +220,11 @@ function jump(){
         }else{
             layer.msg('请输入1-99的正整数');
         } */
-        if(text <= 0 || text >= 100){
+        if (text <= 0 || text >= 100) {
             layer.msg('请输入1-99的正整数');
             return;
         }
-        if(text > pageSize){
+        if (text > pageSize) {
             layer.msg('超过最大页码');
             return;
         }
@@ -229,6 +234,6 @@ function jump(){
     });
 }
 
-function me(){
+function me() {
     window.location.href = "https://msg.wang64.cn?type=me";
 }
