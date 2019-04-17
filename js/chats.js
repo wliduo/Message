@@ -85,10 +85,11 @@ function queryChats(skip, size) {
         for (var i = 0; i < res.length; i++) {
             var li = document.createElement("li");
             var html = "<b>" + res[i].name + "</b>";
+            /* https://www.gravatar.com/avatar/ */
             if (res[i].web !== '') {
-                html = "<a href='"+ res[i].web +"' target='_blank'><img src='http://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+                html = "<a href='"+ res[i].web +"' target='_blank'><img src='https://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
             } else {
-                html = "<img src='http://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' />" + html;
+                html = "<img src='https://cn.gravatar.com/avatar/" + res[i].email.MD5(32) + "' />" + html;
             }
             /* if (res[i].web !== '') {
                 html = html + "<label>" + res[i].web + "</label>";
