@@ -1,92 +1,110 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.2 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
+
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 	<link rel="shortcut icon" href="https://wang64.cn/static/favicon.ico" />
-  	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/basic-contact.css" title="Basic Contact" media="all" />
 	<title>留言板</title>
 	<script>
-        var browsehappy_config = {
-            ie: 12,
-            type: 'box',
-            debug: false,
-            tip: "站点目前不支持IE",
-            show: ['firefox', 'chrome']
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/gh/a632079/browserhappy@0.0.1/browserhappy.min.js"></script>
+		var browsehappy_config = {
+			ie: 12,
+			type: 'box',
+			debug: false,
+			tip: "站点目前不支持IE",
+			show: ['firefox', 'chrome']
+		};
+	</script>
+	<script src="https://cdn.jsdelivr.net/gh/a632079/browserhappy@0.0.1/browserhappy.min.js"></script>
+	<!-- Vue.js -->
+	<script src="https://cdn.staticfile.org/vue/2.5.22/vue.min.js"></script>
 </head>
+
 <body>
 
-<div class="container">
-	<div class="col-md-12 col-sm-12 col-xs-12">
-		<h3>留言板</h3>
-		<p>添加友链，内容交流，都可以在这里留下你的足迹...</p>
-		<label title="点击查看更多联系方式"><a target="_blank" href="https://cv.wang64.cn">联系邮件及QQ</a></label>
-		<p title="点击查看更多联系方式"><a target="_blank" href="https://cv.wang64.cn">1107224733@qq.com</a></p>
-	</div>
-	
-	<div class="col-md-12 col-sm-12 col-xs-12">
-		<form role="form">
-			<div class="row">
-				<div class="col-lg-3" style="margin-top:10px;">
-					<input type="text" id="name" class="form-control" maxlength="12" placeholder="昵称(选填)">
-				</div>
-				<div class="col-lg-4" style="margin-top:10px;">
-					<input type="text" id="email" class="form-control" maxlength="30" placeholder="邮件(选填)">
-				</div>
-				<div class="col-lg-5" style="margin-top:10px;">
-					<input type="text" id="web" class="form-control" maxlength="35" placeholder="网址(选填)">
-				</div>
-			</div>
-			<div class="form-group" style="margin-top:10px;">
-				<textarea class="form-control" id="msg" rows="3" maxlength="200" placeholder="留言"></textarea>
-			</div>
-		</form>
-		<div class="form-group">
-			<button type="submit" onclick="addChats(this)" class="btn btn-danger">提交</button>
-			<button type="reset" onclick="reset()" class="btn btn-default">重置</button>
+	<div class="container">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<h3>留言板</h3>
+			<p>添加友链，内容交流，都可以在这里留下你的足迹...</p>
+			<label title="点击查看更多联系方式"><a target="_blank" href="https://cv.wang64.cn">联系邮件及QQ</a></label>
+			<p title="点击查看更多联系方式"><a target="_blank" href="https://cv.wang64.cn">1107224733@qq.com</a></p>
 		</div>
 
-	</div>
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<form role="form">
+				<div class="row">
+					<div class="col-lg-3" style="margin-top:10px;">
+						<input type="text" id="name" class="form-control" maxlength="12" placeholder="昵称(选填)">
+					</div>
+					<div class="col-lg-4" style="margin-top:10px;">
+						<input type="text" id="email" class="form-control" maxlength="30" placeholder="邮件(选填)">
+					</div>
+					<div class="col-lg-5" style="margin-top:10px;">
+						<input type="text" id="web" class="form-control" maxlength="35" placeholder="网址(选填)">
+					</div>
+				</div>
+				<div class="form-group" style="margin-top:10px;">
+					<textarea class="form-control" id="msg" rows="3" maxlength="200" placeholder="留言"></textarea>
+				</div>
+			</form>
+			<div class="form-group">
+				<button type="submit" onclick="addChats(this)" class="btn btn-danger">留言(弹幕)</button>
+				<button type="reset" onclick="reset()" class="btn btn-default">重置</button>
+			</div>
 
-	<div class="col-md-12 col-sm-12 col-xs-12">
-		<h4 style="margin-bottom: 15px;" onclick="me()">留言</h4>
-		<ul id="ul" class="col-md-12 col-sm-12 col-xs-12">
-			<!-- <li>
+		</div>
+
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<h4 style="margin-bottom: 15px;" onclick="me()">留言</h4>
+			<ul id="ul" class="col-md-12 col-sm-12 col-xs-12">
+				<!-- <li>
 				<a href="https://wang64.cn/" target="_blank"><img src="http://www.gravatar.com/avatar/xxx" /></a>
 				<b>随心</b>
 				<label>1107224733@qq.com</label>
 				<label>2018-11-11 11:11:11</label>
 				<p>添加友链，内容交流，都可以在这里留下你的足迹...</p>
 			</li> -->
-		</ul>
-		<ul class="pager">
-			<li><button onclick="jump(this)" class="btn btn-success active">跳转</button></li>
-			<li><button class="btn btn-link">第<span id="page">10/100</span>页</button></li>
-			<li><button onclick="previous(this)" class="btn btn-primary">上一页</button></li>
-			<li><button onclick="next(this)" class="btn btn-primary">下一页</button></li>
-		</ul>
+			</ul>
+			<ul class="pager">
+				<li><button onclick="jump(this)" class="btn btn-success active">跳转</button></li>
+				<li><button class="btn btn-link">第<span id="page">10/100</span>页</button></li>
+				<li><button onclick="previous(this)" class="btn btn-primary">上一页</button></li>
+				<li><button onclick="next(this)" class="btn btn-primary">下一页</button></li>
+			</ul>
+		</div>
 	</div>
-</div>
 
-<footer class="container-fluid foot-wrap">
-	<a href="https://wang64.cn" target="_blank">
-		<p align="center" style="color:#878B91;">
-			人生没有白走的路每一步都算数
-		</p>
-	</a>
-</footer>
+	<footer class="container-fluid foot-wrap">
+		<a href="https://wang64.cn" target="_blank">
+			<p align="center" style="color:#878B91;">
+				人生没有白走的路每一步都算数
+			</p>
+		</a>
+	</footer>
 
-<script type="text/javascript" src="https://cdn.staticfile.org/jquery/2.2.3/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/hydrogen-js-sdk@1.6.7/dist/Bmob-1.6.2.min.js"></script>
-<script type="text/javascript" src="js/md5.js"></script>
-<script type="text/javascript" src="js/chats.js"></script>
-<!-- 页面点击小红心 -->
-<script type="text/javascript" src="https://wang926454.gitee.io/reader/JS/love.js"></script>
-<script type="text/javascript" src="https://wang64.cn/static/count.js"></script>
+	<div id="app">
+		<my-danmaku ref="myDanmaku" class="demo" :danmus="danmus" :config="config">
+		</my-danmaku>
+
+		<!-- vue-danmaku 非时间流式的弹幕交互组件 https://github.com/hellodigua/vue-danmaku -->
+		<template id="danmakuTpl">
+			<div ref="danmaku" class="vue-danmaku">
+				<slot></slot>
+				<div :class="['danmus', {'show': !this.hidden}, {'paused': this.paused}]" ref="danmus"></div>
+			</div>
+		</template>
+	</div>
+
+	<script type="text/javascript" src="https://cdn.staticfile.org/jquery/2.2.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/hydrogen-js-sdk@1.6.7/dist/Bmob-1.6.2.min.js"></script>
+	<script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/chats.js"></script>
+	<!-- 页面点击小红心 -->
+	<script type="text/javascript" src="https://wang926454.gitee.io/reader/JS/love.js"></script>
+	<script type="text/javascript" src="https://wang64.cn/static/count.js"></script>
 </body>
+
 </html>

@@ -1,3 +1,113 @@
+.vue-danmaku {
+    position: relative;
+    overflow: hidden;
+}
+.vue-danmaku .danmus {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+.vue-danmaku .danmus.show {
+    opacity: 1;
+}
+.vue-danmaku .danmus.paused .dm.move {
+    animation-play-state: paused;
+}
+.vue-danmaku .danmus p {
+    position: absolute;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    margin: 0;
+    white-space: pre;
+}
+.vue-danmaku .danmus .dm {
+    position: absolute;
+    color: #fff;
+    font-size: 18px;
+    right: 0;
+    top: 8px;
+    white-space: pre;
+    text-shadow: 1px 1px 2px #001;
+    transform: translateX(100%);
+}
+.vue-danmaku .danmus .dm.move {
+    will-change: transform;
+    animation-name: danmaku;
+    animation-timing-function: linear;
+    animation-play-state: running;
+}
+@keyframes danmaku {
+    from {
+      transform: translateX(100%);
+    }
+}
+@-webkit-keyframes danmaku {
+    from {
+      -webkit-transform: translateX(100%);
+    }
+}
+
+.demo {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* background: linear-gradient(45deg, #5ac381, #20568b); */
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    filter:alpha(opacity=75); 
+    -moz-opacity:0.75; 
+    opacity:0.75;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    filter:alpha(opacity=75); 
+    -moz-opacity:0.75; 
+    opacity:0.75;
+}
+
 /*
 Original design: Basic Contact (v1.2 - Sep 11, 2012) - A free xhtml/css website template by Andreas Viklund.
 For more information, see http://www.cssmoban.com/templates/basic-contact/
@@ -52,6 +162,9 @@ img {
     display: block;
     border-radius: 4px;
     margin-right: 10px;
+    filter:alpha(opacity=75); 
+    -moz-opacity:0.75; 
+    opacity:0.75;
 }
 
 p {

@@ -78,7 +78,7 @@ function queryChats(skip, size) {
     query.skip(skip);
     query.limit(size);
     query.find().then(res => {
-        console.log(res);
+        // console.log(res);
         var ul = document.getElementById("ul");
         ul.innerHTML = "";
         // 将查询的留言填写进ul li
@@ -87,7 +87,7 @@ function queryChats(skip, size) {
             var html = "<b>" + res[i].name + "</b>";
             /* https://www.gravatar.com/avatar/ */
             if (res[i].web !== '') {
-                html = "<a href='"+ res[i].web +"' target='_blank'><img src='https://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+                html = "<a href='" + res[i].web + "' target='_blank'><img src='https://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
             } else {
                 html = "<img src='https://cn.gravatar.com/avatar/" + res[i].email.MD5(32) + "' />" + html;
             }
@@ -133,7 +133,7 @@ function addChats(btn) {
     if (name.trim() === '') {
         name = '匿名';
     }
-    const query = Bmob.Query('chats');
+    const query = Bmob.Query("chats");
     query.set("url", url);
     query.set("name", name);
     query.set("email", email);
@@ -150,6 +150,8 @@ function addChats(btn) {
         // console.log(res);
         reset();
         layer.msg('留言成功');
+        // myHome.$refs.myDanmaku.add(msg)
+        myHome.$refs.myDanmaku.danmus.push(msg)
         skip = 0;
         queryChats(skip, size);
         btn.disabled = false;
@@ -193,7 +195,7 @@ function next(btn) {
     btn.disabled = true;
     skip = skip + size;
     if (skip >= countSize) {
-        console.log(skip + ',' + countSize);
+        // console.log(skip + ',' + countSize);
         skip = skip - size;
         layer.msg('当前是最后一页');
         btn.disabled = false;
@@ -238,3 +240,255 @@ function jump() {
 function me() {
     window.location.href = "https://msg.wang64.cn?type=me";
 }
+
+// 新建组件
+var myDanmakuTpl = Vue.extend({
+    template: '#danmakuTpl',
+    props: {
+        danmus: {
+            type: Array,
+            required: true
+        },
+        config: {
+            type: Object,
+            default: () => {
+                return {}
+            }
+        }
+    },
+    data: function () {
+        return {
+            container: null,
+            isActive: false,
+            timer: null,
+            $danmaku: null,
+            $danmus: null,
+            danmaku: {
+                danmus: [],
+                width: 0, // danmaku宽度
+                channels: 0, // 轨道数量
+                loop: false // 是否循环
+            },
+            danmu: {
+                height: 30,
+                fontSize: 18,
+                speed: 5
+            },
+            hidden: false,
+            paused: false,
+            index: 0,
+            continue: true,
+            danChannel: {}
+        }
+    },
+    // 启动时就执行
+    mounted: function () {
+        this.$nextTick(() => {
+            this.init()
+            this.$emit('inited')
+        })
+    },
+    methods: {
+        init() {
+            this.initCore()
+            this.initConfig()
+        },
+        reset() {
+            this.initConfig()
+        },
+        mouseIn() {
+            this.$emit('mouseIn')
+        },
+        mouseOut() {
+            this.$emit('mouseOut')
+        },
+        initCore() {
+            this.$danmaku = this.$refs.danmaku
+            this.$danmus = this.$refs.danmus
+        },
+        initConfig() {
+            this.danmaku.width = this.$danmaku.offsetWidth
+            this.danmaku.height = this.$danmaku.offsetHeight
+            this.danmaku.danmus = this.danmus
+            this.danmaku.channels = this.config.channels || parseInt(this.danmaku.height / this.danmu.height)
+            this.danmaku.loop = this.config.loop || this.danmaku.loop
+            this.danmu.speed = this.config.speed || this.danmu.speed
+            this.danmu.fontSize = this.config.fontSize || this.danmu.fontSize
+        },
+        play() {
+            if (this.paused) {
+                this.paused = false
+                return
+            }
+            if (!this.timer) {
+                this.draw()
+            }
+        },
+        draw() {
+            this.$nextTick(() => {
+                this.timer = setInterval(() => {
+                    if (this.index > this.danmus.length - 1) {
+                        // console.log('1')
+                        this.config.loop ? this.insert() : this.clear()
+                    } else {
+                        // console.log('2')
+                        this.insert()
+                    }
+                }, 50)
+            })
+        },
+        insert() {
+            const index = this.config.loop ? this.index % this.danmus.length : this.index
+            const el = document.createElement(`p`)
+            if (this.continue) {
+                el.classList.add(`dm`)
+                el.classList.add(`move`)
+                el.style.animationDuration = `${this.danmu.speed}s`
+                el.style.fontSize = `${this.danmu.fontSize}px`
+                el.innerHTML = this.danmus[index]
+                el.setAttribute('index', this.index)
+                this.$danmus.appendChild(el)
+            }
+            this.$nextTick(() => {
+                let channelIndex = this.getChannel(el)
+                if (channelIndex >= 0) {
+                    this.continue = true
+                    const width = el.offsetWidth
+                    const height = this.danmu.height > this.danmu.fontSize ? this.danmu.height : this.danmu.fontSize + 4
+                    el.style.top = channelIndex * height + 'px'
+                    el.style.width = width + 1 + 'px'
+                    el.style.transform = `translateX(-${this.danmaku.width}px)`
+                    el.addEventListener('animationend', () => {
+                        this.$danmus.removeChild(el)
+                    })
+                    if (el.classList.length > 0) {
+                        this.index++
+                    }
+                } else {
+                    if (el.classList.length > 0) {
+                        this.$danmus.removeChild(el)
+                    }
+                }
+            })
+        },
+        getChannel(el) {
+            const tmp = this.$danmus.offsetWidth / ((this.$danmus.offsetWidth + el.offsetWidth) / 6)
+            for (let i = 0; i < this.danmaku.channels; i++) {
+                const items = this.danChannel[i + '']
+                if (items && items.length) {
+                    for (let j = 0; j < items.length; j++) {
+                        const danRight = this.getDanRight(items[j]) - 10
+                        if (danRight <= this.$danmus.offsetWidth - tmp * ((this.$danmus.offsetWidth + parseInt(items[j].offsetWidth)) / 6) || danRight <= 0) {
+                            break
+                        }
+                        if (j === items.length - 1) {
+                            this.danChannel[i + ''].push(el)
+                            el.addEventListener('animationend', () => {
+                                this.danChannel[i + ''].splice(0, 1)
+                            })
+                            return i % this.danmaku.channels
+                        }
+                    }
+                } else {
+                    this.danChannel[i + ''] = [el]
+                    el.addEventListener('animationend', () => {
+                        this.danChannel[i + ''].splice(0, 1)
+                    })
+                    return i % this.danmaku.channels
+                }
+            }
+            return -1
+        },
+        // 弹幕到右侧的距离
+        getDanRight(el) {
+            const eleWidth = el.offsetWidth || parseInt(el.style.width)
+            const eleRight = el.getBoundingClientRect().right || this.$danmus.getBoundingClientRect().right + eleWidth
+            return this.$danmus.getBoundingClientRect().right - eleRight
+        },
+        // 添加弹幕
+        add(danmu) {
+            const index = this.index % this.danmaku.danmus.length
+            this.danmaku.danmus.splice(index, 0, danmu)
+        },
+        pause() {
+            this.paused = true
+        },
+        stop() {
+            this.danChannel = {}
+            this.$refs.danmus.innerHTML = ''
+            this.paused = false
+            this.hidden = false
+            this.clear()
+        },
+        clear() {
+            clearInterval(this.timer)
+            this.timer = null
+            this.index = 0
+        },
+        show() {
+            this.hidden = false
+        },
+        hide() {
+            this.hidden = true
+        },
+        resize() {
+            this.initConfig()
+            const items = this.$danmaku.getElementsByClassName('dm')
+            for (let i = 0; i < items.length; i++) {
+                items[i].style.transform = `translateX(-${this.danmaku.width}px)`
+            }
+        }
+    }
+});
+
+// 全局注册组件每个Vue实例都可以使用
+Vue.component('my-danmaku', myDanmakuTpl);
+
+var myHome = new Vue({
+    el: '#app',
+    data: {
+        config: {
+            channels: 5,
+            loop: true,
+            speed: 15,
+            fontSize: 18
+        },
+        danmus: []
+    },
+    // 启动时就执行
+    mounted: function () {
+        this.$nextTick(() => {
+            this.queryData()
+        })
+    },
+    methods: {
+        queryData() {
+            const query = Bmob.Query("chats");
+            // 根据当前url查询数据
+            query.equalTo("url", "==", url);
+            if (getQueryString("type")) {
+                // query.or(query.equalTo("type", '==', '0'), query.equalTo("type", '==', '1'));
+                query.equalTo("type", '==', '1');
+            } else {
+                query.equalTo("type", '==', '0');
+            }
+            // 时间降序排列
+            query.order("-date");
+            query.find().then(res => {
+                var msgArray = []
+                for (var key in res) {
+                    msgArray.push(res[key].msg)
+                }
+                // 判断手机还是PC
+                var viewType = navigator.userAgent.toLowerCase()
+                viewType = viewType.match(/(phone|pad|pod|midp|iphone|ipod|iphone os|ios|ipad|android|mobile|blackberry|iemobile|mqqbrowser|juc|rv:1.2.3.4|ucweb|fennec|wosbrowser|browserng|webos|symbian|windows ce|windows mobile|windows phone)/i)
+                if (viewType) {
+                    this.config.speed = 8
+                }
+                this.danmus = msgArray
+                this.$refs.myDanmaku.reset()
+                this.$refs.myDanmaku.play()
+            });
+        }
+    }
+});
