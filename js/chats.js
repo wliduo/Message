@@ -9,7 +9,7 @@ var countSize = 0;
 // 总页数
 var pageSize = 0;
 var url = window.location.href.split('?')[0];
-// var url =  "https://msg.wang64.cn/";
+// var url =  "https://msg.dolyw.com/";
 
 // 获取当前时间
 function getNowFormatDate() {
@@ -238,7 +238,7 @@ function jump() {
 }
 
 function me() {
-    window.location.href = "https://msg.wang64.cn?type=me";
+    window.location.href = "https://msg.dolyw.com?type=me";
 }
 
 // 新建组件
