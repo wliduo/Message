@@ -85,11 +85,15 @@ function queryChats(skip, size) {
         for (var i = 0; i < res.length; i++) {
             var li = document.createElement("li");
             var html = "<b>" + res[i].name + "</b>";
-            /* https://www.gravatar.com/avatar/ */
+            // https://www.gravatar.com/avatar/
+            // https://cn.gravatar.com/avatar/
+            // https://cdn.v2ex.com/gravatar/
+            // https://dn-qiniu-avatar.qbox.me/avatar/
+            // 统一换成七牛的的转发
             if (res[i].web !== '') {
-                html = "<a href='" + res[i].web + "' target='_blank'><img src='https://www.gravatar.com/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+                html = "<a href='" + res[i].web + "' target='_blank'><img src='https://dn-qiniu-avatar.qbox.me/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
             } else {
-                html = "<img src='https://cn.gravatar.com/avatar/" + res[i].email.MD5(32) + "' />" + html;
+                html = "<img src='https://dn-qiniu-avatar.qbox.me/avatar/" + res[i].email.MD5(32) + "' />" + html;
             }
             /* if (res[i].web !== '') {
                 html = html + "<label>" + res[i].web + "</label>";
@@ -485,7 +489,12 @@ var myHome = new Vue({
                 if (viewType) {
                     this.config.speed = 8
                 }
-                this.danmus = msgArray
+                if (msgArray.length > 0) {
+                    this.danmus = msgArray
+                } else {
+                    this.danmus = ['还没有留言哦~']
+                }
+                // console.log(this.danmus)
                 this.$refs.myDanmaku.reset()
                 this.$refs.myDanmaku.play()
             });
