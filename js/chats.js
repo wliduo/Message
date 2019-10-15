@@ -91,8 +91,12 @@ function queryChats(skip, size) {
             // https://cdn.v2ex.com/gravatar/
             // https://dn-qiniu-avatar.qbox.me/avatar/
             // 统一换成七牛的的转发
-            if (res[i].web !== '') {
-                html = "<a href='" + res[i].web + "' target='_blank'><img src='https://dn-qiniu-avatar.qbox.me/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+            if (res[i].web) {
+                if (res[i].web.indexOf("http") != -1) {
+                    html = "<a href='https://dolyw.com/go?url=" + res[i].web + "' target='_blank'><img src='https://dn-qiniu-avatar.qbox.me/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+                } else {
+                    html = "<a href='https://dolyw.com/go?url=http://" + res[i].web + "' target='_blank'><img src='https://dn-qiniu-avatar.qbox.me/avatar/" + res[i].email.MD5(32) + "' /></a>" + html;
+                }
             } else {
                 html = "<img src='https://dn-qiniu-avatar.qbox.me/avatar/" + res[i].email.MD5(32) + "' />" + html;
             }
