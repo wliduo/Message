@@ -6,7 +6,7 @@
 // 跳过条数
 var skip = 0;
 // 条数(每页条数)
-var size = 5;
+var size = 6;
 // 总条数
 var countSize = 0;
 // 总页数
@@ -118,6 +118,11 @@ function queryChats(skip, size) {
             li.innerHTML = "<label>还没有留言哦~</label>";
             ul.appendChild(li);
         }
+        var btns = document.getElementsByName("btns");
+        btns[0].disabled = false;
+        btns[1].disabled = false;
+        btns[2].disabled = false;
+        btns[3].disabled = false;
     });
 }
 
@@ -163,7 +168,7 @@ function addChats(btn) {
         myHome.$refs.myDanmaku.danmus.push(msg)
         skip = 0;
         queryChats(skip, size);
-        btn.disabled = false;
+        // btn.disabled = false;
     }).catch(err => {
         layer.msg('留言失败，请联系管理员');
         btn.disabled = false;
@@ -194,7 +199,7 @@ function previous(btn) {
         skip = skip - size;
         queryChats(skip, size);
         var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
-        btn.disabled = false;
+        // btn.disabled = false;
     }
 }
 
@@ -212,7 +217,7 @@ function next(btn) {
     } else {
         queryChats(skip, size);
         var page = (parseInt(skip) / parseInt(size)) + parseInt(1);
-        btn.disabled = false;
+        // btn.disabled = false;
     }
 }
 

@@ -57,7 +57,7 @@
 				</div>
 			</form>
 			<div class="form-group">
-				<button type="submit" onclick="addChats(this)" class="btn btn-danger">留言(弹幕)</button>
+				<button name="btns" type="submit" onclick="addChats(this)" class="btn btn-danger">留言(弹幕)</button>
 				<button type="reset" onclick="reset()" class="btn btn-default">重置</button>
 			</div>
 
@@ -75,10 +75,10 @@
 			</li> -->
 			</ul>
 			<ul class="pager">
-				<li><button onclick="jump(this)" class="btn btn-success active">跳转</button></li>
+				<li><button name="btns" onclick="jump(this)" class="btn btn-success active">跳转</button></li>
 				<li><button class="btn btn-link">第<span id="page">10/100</span>页</button></li>
-				<li><button onclick="previous(this)" class="btn btn-primary">上一页</button></li>
-				<li><button onclick="next(this)" class="btn btn-primary">下一页</button></li>
+				<li><button name="btns" onclick="previous(this)" class="btn btn-primary">上一页</button></li>
+				<li><button name="btns" onclick="next(this)" class="btn btn-primary">下一页</button></li>
 			</ul>
 		</div>
 	</div>
