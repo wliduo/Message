@@ -1,5 +1,7 @@
 // Bmob.initialize("c7401c529e15dad3f96901ac95e087dd", "8e9ecc1c5a2df4e02efe6a602f0566b9");
-Bmob.initialize("a572282f77c9ecea783187895309adf8", "93846e2a92e7966381ce54794df03a6e");
+// Bmob.initialize("a572282f77c9ecea783187895309adf8", "93846e2a92e7966381ce54794df03a6e");
+// Bmob.initialize("a41a0412ca579ff79acc133e82c4df87", "a796992ff311ad2e23405d24ee932e10");
+Bmob.initialize("312dc29a74149cfa7ddf56c80184b355", "64e0be9ac0731c95e262f91eda09c045");
 
 function me() {
     layer.prompt({ title: '请输入密码', formType: 0 }, function (text, index) {
